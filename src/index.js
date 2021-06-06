@@ -85,5 +85,4 @@ function showNotice(noticeText) {
 function showModal(e) {
   const instance = basicLightbox.create(`${e.target.outerHTML}`);
   instance.show();
-  console.log('click', e.target.outerHTML)
 }
