@@ -29,6 +29,7 @@ async function onSearchBtnClick(e) {
   const badRequestText = 'Nothing found';
 
   clearImgList();
+  refs.loadMoreBtn.classList.add('is-hiden');
 
   if (inputValue === '') {
     showNotice(voidSearchQueryText);
@@ -42,19 +43,26 @@ async function onSearchBtnClick(e) {
   if (response.hits.length !==0) {
     renderImgList(response);
     refs.loadMoreBtn.classList.remove('is-hiden');
-    refs.listEl.addEventListener('click', showModal)
+    refs.listEl.addEventListener('click', showModal);
   } else {
     showNotice(badRequestText);
-    refs.loadMoreBtn.classList.add('is-hiden');
   }
 }
 
 async function onLoadMoreBtnClick(e) {
   e.preventDefault();
 
+  refs.loadMoreBtn.setAttribute('disabled', 'true');
+  refs.loadMoreBtn.textContent = 'In progress'
+
   apiService.incrementPage();
 
   const response = await apiService.fetchImg();
+  if(response.hits.length !==0) {
+    refs.loadMoreBtn.removeAttribute('disabled', 'true');
+    refs.loadMoreBtn.textContent = 'Load More';
+  }
+
   renderImgList(response);
 
   refs.loadMoreBtn.scrollIntoView({
@@ -83,6 +91,8 @@ function showNotice(noticeText) {
 }
 
 function showModal(e) {
-  const instance = basicLightbox.create(`<img src="${e.srcElement.dataset.largeimg}" alt="large image">`);
-  instance.show();
+  if (e.target.nodeName === 'IMG'){
+    const instance = basicLightbox.create(`<img src="${e.srcElement.dataset.largeimg}" alt="large image">`);
+    instance.show();
+  }
 }
