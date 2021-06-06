@@ -2,11 +2,12 @@ import { notice } from '@pnotify/core';
 import "@pnotify/core/dist/PNotify.css";
 import "@pnotify/core/dist/BrightTheme.css";
 
+import * as basicLightbox from '../node_modules/basiclightbox/dist/basicLightbox.min';
+import '../node_modules/basiclightbox/dist/basicLightbox.min.css';
+
 import './sass/main.scss';
 import ApiService from './js/apiService';
 import card from './partials/card.hbs';
-
-
 
 const refs = {
   listEl: document.querySelector('.gallery'),
@@ -41,6 +42,7 @@ async function onSearchBtnClick(e) {
   if (response.hits.length !==0) {
     renderImgList(response);
     refs.loadMoreBtn.classList.remove('is-hiden');
+    refs.listEl.addEventListener('click', showModal)
   } else {
     showNotice(badRequestText);
     refs.loadMoreBtn.classList.add('is-hiden');
@@ -78,4 +80,10 @@ function showNotice(noticeText) {
     maxTextHeight: null,
     delay: 3000,
   });
+}
+
+function showModal(e) {
+  const instance = basicLightbox.create(`${e.target.outerHTML}`);
+  instance.show();
+  console.log('click', e.target.outerHTML)
 }
