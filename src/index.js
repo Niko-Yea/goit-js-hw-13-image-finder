@@ -23,18 +23,14 @@ const apiService = new ApiService();
 async function onSearchBtnClick(e) {
   e.preventDefault();
 
-  const inputValue = refs.inputEl.value
+  const inputValue = refs.inputEl.value;
+  const voidSearchQueryText = 'Please type search query';
+  const badRequestText = 'Nothing found';
 
   clearImgList();
 
   if (inputValue === '') {
-    notice({
-      text: 'Please type search query',
-      type: 'notice',
-      sticker: false,
-      maxTextHeight: null,
-      delay: 3000,
-    })
+    showNotice(voidSearchQueryText);
     return;
   }
 
@@ -46,16 +42,9 @@ async function onSearchBtnClick(e) {
     renderImgList(response);
     refs.loadMoreBtn.classList.remove('is-hiden');
   } else {
-    notice({
-      text: 'Nothing found',
-      type: 'notice',
-      sticker: false,
-      maxTextHeight: null,
-      delay: 3000,
-    });
+    showNotice(badRequestText);
     refs.loadMoreBtn.classList.add('is-hiden');
   }
-
 }
 
 async function onLoadMoreBtnClick(e) {
@@ -67,9 +56,9 @@ async function onLoadMoreBtnClick(e) {
   renderImgList(response);
 
   refs.loadMoreBtn.scrollIntoView({
-  behavior: 'smooth',
-  block: 'end',
-});
+    behavior: 'smooth',
+    block: 'end',
+  });
 }
 
 function renderImgList(imgArr) {
@@ -79,4 +68,14 @@ function renderImgList(imgArr) {
 
 function clearImgList() {
   refs.listEl.innerHTML = '';
+}
+
+function showNotice(noticeText) {
+  notice({
+    text: noticeText,
+    type: 'notice',
+    sticker: false,
+    maxTextHeight: null,
+    delay: 3000,
+  });
 }
